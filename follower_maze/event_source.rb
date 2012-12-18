@@ -56,7 +56,7 @@ module FollowerMaze
     end
 
     def next_event
-      if @events.empty? || @events.first.sequence_index != @last_sequence_index + 1
+      if @events.empty? || !next_event?(@events.first)
         return nil
       end
 
