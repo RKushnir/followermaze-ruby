@@ -17,20 +17,15 @@ class EventSource
 
     while payload = @socket.gets
       begin
-        payload.chomp!
-        log_info("Event payload received: %s" % payload)
-        new_event = @event_builder.call(payload, @user_repository)
+        log_info("Event payload received: %s" % payload.inspect)
+        new_event = @event_builder.call(payload.chomp, @user_repository)
 
-        # ignore events with non-positive or duplicated sequence indices
-        if new_event.sequence_index > @last_sequence_index
-          store_event(new_event)
+        if store_event(new_event) && next_event?(new_event)
           process_events(&block)
-        else
-          log_warn("Invalid event sequence index: %d" % new_event.sequence_index)
         end
       rescue UnrecognizedEventError
         # ignore bad input
-        log_warn("Invalid event payload: %s" % payload)
+        log_warn("Invalid event payload: %s" % payload.inspect)
       end
     end
   end
@@ -38,14 +33,25 @@ class EventSource
 private
 
   def store_event(event)
+    # ignore events with non-positive or duplicated sequence indices
+    if event.sequence_index <= @last_sequence_index
+      log_warn("Invalid event sequence index: %d" % event.sequence_index)
+      return false
+    end
+
     @events << event
-    @events.sort_by!(&:sequence_index)
+    true
   end
 
   def process_events(&block)
+    @events.sort_by!(&:sequence_index)
     while event = next_event
       yield event
     end
+  end
+
+  def next_event?(event)
+    event.sequence_index == @last_sequence_index + 1
   end
 
   def next_event
