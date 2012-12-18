@@ -23,7 +23,7 @@ module FollowerMaze
       puts "Event source thread started"
 
       user_clients_thread = start_user_clients_thread(@user_clients_port)
-      puts "User client thread started"
+      puts "User clients thread started"
 
       puts "Press Ctrl+C to interrupt..."
 
