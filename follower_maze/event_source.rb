@@ -38,13 +38,13 @@ module FollowerMaze
 
     def store_event(event)
       # ignore events with non-positive or duplicated sequence indices
-      if event.sequence_index <= @last_sequence_index
-        log_warn("Invalid event sequence index: %d" % event.sequence_index)
-        return false
+      if @last_sequence_index < event.sequence_index
+        @events << event
+        return true
       end
 
-      @events << event
-      true
+      log_warn("Invalid event sequence index: %d" % event.sequence_index)
+      return false
     end
 
     def process_sequential_events(&block)
