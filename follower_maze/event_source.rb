@@ -19,7 +19,7 @@ module FollowerMaze
       while payload = @socket.gets
         begin
           log_info("Event payload received: %s" % payload.inspect)
-          new_event = @event_builder.call(payload.chomp, @user_repository)
+          new_event = build_event(payload)
 
           if store_event(new_event) && next_event?(new_event)
             process_events(&block)
@@ -32,6 +32,9 @@ module FollowerMaze
     end
 
   private
+    def build_event(payload)
+      @event_builder.call(payload.chomp, @user_repository)
+    end
 
     def store_event(event)
       # ignore events with non-positive or duplicated sequence indices
