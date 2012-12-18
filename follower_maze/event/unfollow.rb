@@ -13,6 +13,8 @@ module FollowerMaze
         []
       end
 
+      # A pub/sub pattern would be appropriate here. But we need the
+      # +user_repository+ for +StatusUpdate+ event anyway, so just leaving it simple.
       def run_callbacks
         user = @user_repository.find_or_create(@to_user_id)
         user.remove_follower(@from_user_id)
