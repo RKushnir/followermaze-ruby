@@ -3,7 +3,7 @@ require 'open3'
 describe "integration", slow: true do
   it "passes sample client implementation" do
     begin
-      server_in, server_out, server_wait_thr = Open3.popen2e('ruby server.rb')
+      server_in, server_out, server_wait_thr = Open3.popen2e('ruby app.rb')
       client_out_str, client_status = Open3.capture2e('cd spec/bin && ./followermaze.sh')
 
       client_status.should be_success

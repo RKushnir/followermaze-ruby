@@ -3,44 +3,62 @@ require './dispatcher'
 require './event_source'
 require './user_repository'
 
-dispatcher = Dispatcher.new
-user_repository = UserRepository.new
+class Server
+  def self.run(source_port=9090, clients_port=9099)
+    new(source_port, clients_port).run
+  end
 
-Thread.abort_on_exception = true
+  def initialize(source_port, clients_port)
+    @event_source_port = source_port
+    @user_clients_port = clients_port
+    @dispatcher = Dispatcher.new
+    @user_repository = UserRepository.new
+  end
 
-event_source_thread = Thread.new do
-  server = TCPServer.new 9090
-  loop do
-    begin
-      source_socket = server.accept
+  def run
+    Thread.abort_on_exception = true
 
-      event_source = EventSource.new(source_socket, user_repository)
-      event_source.each do |event|
-        dispatcher.event_received(event)
+    event_source_thread = start_event_source_thread(@event_source_port)
+    puts "Event source thread started"
+
+    user_clients_thread = start_user_clients_thread(@user_clients_port)
+    puts "User client thread started"
+
+    puts "Press Ctrl+C to interrupt..."
+
+    [event_source_thread, user_clients_thread].each(&:join)
+  rescue Interrupt
+    puts "Exiting..."
+  end
+
+private
+
+  def start_event_source_thread(port)
+    Thread.new do
+      server = TCPServer.new port
+      loop do
+        begin
+          source_socket = server.accept
+
+          event_source = EventSource.new(source_socket, @user_repository)
+          event_source.each do |event|
+            @dispatcher.event_received(event)
+          end
+        ensure
+          source_socket.close
+        end
       end
-    ensure
-      source_socket.close
     end
   end
-end
 
-puts "Event source thread started"
-
-user_client_thread = Thread.new do
-  server = TCPServer.new 9099
-  begin
-    loop { dispatcher.client_connected(server.accept) }
-  ensure
-    dispatcher.disconnect_all
+  def start_user_clients_thread(port)
+    Thread.new do
+      server = TCPServer.new port
+      begin
+        loop { @dispatcher.client_connected(server.accept) }
+      ensure
+        @dispatcher.disconnect_all
+      end
+    end
   end
-end
-
-puts "User client thread started"
-
-puts "Press Ctrl+C to interrupt..."
-
-begin
-  [event_source_thread, user_client_thread].each(&:join)
-rescue Interrupt
-  puts "Exiting..."
 end
