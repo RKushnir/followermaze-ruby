@@ -1,6 +1,6 @@
-require './user'
+require './follower_maze/user'
 
-describe User do
+describe FollowerMaze::User do
   subject { described_class.new(42) }
 
   it "adds followers" do

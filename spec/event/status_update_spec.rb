@@ -1,6 +1,6 @@
-require './event'
+require './follower_maze/event'
 
-describe Event::StatusUpdate do
+describe FollowerMaze::Event::StatusUpdate do
   let(:followed_user) { mock("followed_user", follower_ids: ['23', '54']) }
   let(:user_repository) { mock("user_repository") }
 

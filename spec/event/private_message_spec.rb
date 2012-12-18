@@ -1,6 +1,6 @@
-require './event'
+require './follower_maze/event'
 
-describe Event::PrivateMessage do
+describe FollowerMaze::Event::PrivateMessage do
   subject { described_class.new(1, "", nil, '42', '17') }
 
   it "returns to_user_id as recipient" do

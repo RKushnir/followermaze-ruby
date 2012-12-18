@@ -1,6 +1,6 @@
-require './event'
+require './follower_maze/event'
 
-describe Event::Unfollow do
+describe FollowerMaze::Event::Unfollow do
   let(:followed_user) { mock("followed_user") }
   let(:user_repository) { mock("user_repository") }
 

@@ -1,6 +1,6 @@
-require './dispatcher'
+require './follower_maze/dispatcher'
 
-describe Dispatcher do
+describe FollowerMaze::Dispatcher do
   it "sends events to appropriate clients" do
     event = double("event", payload: "hello", run_callbacks: nil)
     related_client = double("related client", gets: "42\r\n")

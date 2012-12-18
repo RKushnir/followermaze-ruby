@@ -1,6 +1,6 @@
-require './event'
+require './follower_maze/event'
 
-describe Event::Broadcast do
+describe FollowerMaze::Event::Broadcast do
   subject { described_class.new(1, "", nil) }
 
   it "returns all connected clients as recipients" do

@@ -1,3 +1,3 @@
-require './server'
+require './follower_maze/server'
 
-Server.run
+FollowerMaze::Server.run

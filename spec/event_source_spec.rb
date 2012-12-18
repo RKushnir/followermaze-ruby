@@ -1,6 +1,6 @@
-require './event_source'
+require './follower_maze/event_source'
 
-describe EventSource do
+describe FollowerMaze::EventSource do
   let(:socket) do
     double('socket').tap do |s|
       s.stub(:gets).and_return(
