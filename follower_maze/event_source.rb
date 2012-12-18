@@ -22,7 +22,7 @@ module FollowerMaze
           new_event = build_event(payload)
 
           if store_event(new_event) && next_event?(new_event)
-            process_events(&block)
+            process_sequential_events(&block)
           end
         rescue UnrecognizedEventError
           # ignore bad input
@@ -47,7 +47,7 @@ module FollowerMaze
       true
     end
 
-    def process_events(&block)
+    def process_sequential_events(&block)
       @events.sort_by!(&:sequence_index)
       while event = next_event
         yield event
