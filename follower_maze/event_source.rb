@@ -51,8 +51,6 @@ module FollowerMaze
       @events.sort_by!(&:sequence_index)
       while event = next_event
         yield event
-
-        log_info("Event processed: %s" % event.payload.inspect)
       end
     end
 
