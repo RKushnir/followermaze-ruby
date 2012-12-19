@@ -52,8 +52,6 @@ module FollowerMaze
       event_recipient_ids(event).each do |user_id|
         notify_client(user_id, event)
       end
-
-      log_info("Event processed: %s" % event.payload.inspect)
     end
 
     def disconnect_all
