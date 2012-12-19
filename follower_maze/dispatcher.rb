@@ -50,7 +50,7 @@ module FollowerMaze
       event.run_callbacks
 
       event_recipient_ids(event).each do |user_id|
-        notify_user(user_id, event)
+        notify_client(user_id, event)
       end
 
       log_info("Event processed: %s" % event.payload)
@@ -68,7 +68,7 @@ module FollowerMaze
       event.recipient_ids(connected_client_ids) & connected_client_ids
     end
 
-    def notify_user(user_id, event)
+    def notify_client(user_id, event)
       client = @user_clients.fetch(user_id)
       client.socket.puts(event.payload)
     rescue IOError # client disconnected
