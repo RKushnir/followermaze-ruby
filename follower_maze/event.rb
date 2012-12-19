@@ -11,7 +11,7 @@ module FollowerMaze
     autoload :StatusUpdate, './follower_maze/event/status_update'
 
     def self.build(payload, user_repository)
-      params = payload.split('|')
+      params = payload.chomp.split('|')
       sequence_index = params.fetch(0).to_i
       type = params.fetch(1)
       event_class = class_from_type(type)

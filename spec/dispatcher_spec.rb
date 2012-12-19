@@ -2,12 +2,12 @@ require './follower_maze/dispatcher'
 
 describe FollowerMaze::Dispatcher do
   it "sends events to appropriate clients" do
-    event = double("event", payload: "hello", run_callbacks: nil)
+    event = double("event", payload: "hello\r\n", run_callbacks: nil)
     related_client = double("related client", gets: "42\r\n")
     non_related_client = double("non related client", gets: "11\r\n")
 
     event.should_receive(:recipient_ids).with(["42", "11"]).and_return(["42"])
-    related_client.should_receive(:puts).with("hello")
+    related_client.should_receive(:write).with("hello\r\n")
     non_related_client.should_not_receive(:puts)
 
     subject.client_connected(related_client)

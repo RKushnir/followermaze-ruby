@@ -33,7 +33,7 @@ module FollowerMaze
 
   private
     def build_event(payload)
-      @event_builder.call(payload.chomp, @user_repository)
+      @event_builder.call(payload, @user_repository)
     end
 
     def store_event(event)

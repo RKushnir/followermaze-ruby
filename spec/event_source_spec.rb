@@ -22,9 +22,9 @@ describe FollowerMaze::EventSource do
     event2 = double('event 2', sequence_index: 2)
     event3 = double('event 3', sequence_index: 3)
 
-    event_builder.should_receive(:call).with('event 1', user_repository).and_return(event1)
-    event_builder.should_receive(:call).with('event 2', user_repository).and_return(event2)
-    event_builder.should_receive(:call).with('event 3', user_repository).and_return(event3)
+    event_builder.should_receive(:call).with("event 1\r\n", user_repository).and_return(event1)
+    event_builder.should_receive(:call).with("event 2\r\n", user_repository).and_return(event2)
+    event_builder.should_receive(:call).with("event 3\r\n", user_repository).and_return(event3)
 
     subject.take(3).should == [event1, event2, event3]
   end

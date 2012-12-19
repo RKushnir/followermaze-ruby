@@ -53,7 +53,7 @@ module FollowerMaze
         notify_client(user_id, event)
       end
 
-      log_info("Event processed: %s" % event.payload)
+      log_info("Event processed: %s" % event.payload.inspect)
     end
 
     def disconnect_all
@@ -70,7 +70,7 @@ module FollowerMaze
 
     def notify_client(user_id, event)
       client = @user_clients.fetch(user_id)
-      client.socket.puts(event.payload)
+      client.socket.write(event.payload)
     rescue IOError # client disconnected
       @user_clients.remove(user_id)
       log_info("Client disconnected: %d" % user_id)
